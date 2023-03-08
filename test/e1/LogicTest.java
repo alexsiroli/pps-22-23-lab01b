@@ -2,6 +2,8 @@ package e1;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,21 +11,19 @@ import static org.junit.jupiter.api.Assertions.*;
 public class LogicTest {
 
     public static final int SIZE = 5;
-    private final Logics logic = new LogicsImpl(SIZE);
+    private final Logics randomLogics = new LogicsImpl(SIZE);
 
     @Test
-    void testUniquePawns(){
+    void checkUniquePawns(){
         int numberOfKnighst = 0;
         int numberOfPawns = 0;
 
         for (int i=0; i<SIZE; i++){
             for (int j=0; j<SIZE; j++){
-                if (this.logic.hasKnight(i,j)){
+                if (this.randomLogics.hasKnight(i,j))
                     numberOfKnighst++;
-                }
-                if (this.logic.hasPawn(i,j)){
+                if (this.randomLogics.hasPawn(i,j))
                     numberOfPawns++;
-                }
             }
         }
 
@@ -34,33 +34,55 @@ public class LogicTest {
     @Test
     void checkValidPositions(){
         Pair<Integer, Integer> knightPosition = this.getKnightPosition();
-        Pair<Integer,Integer> pawnPosition = this.getPawnPosition();
         assertTrue(this.isValidPosition(knightPosition));
+        Pair<Integer,Integer> pawnPosition = this.getPawnPosition();
         assertTrue(this.isValidPosition(pawnPosition));
     }
 
     @Test
     void checkDifferentKnightAndPawnPosition(){
-        assertTrue(this.getKnightPosition() != this.getPawnPosition());
+        assertNotSame(this.getKnightPosition(), this.getPawnPosition());
     }
 
     @Test
     void checkMovement(){
         Pair<Integer,Integer> initialPosition = this.getKnightPosition();
-        for (int i=-2; i<=2; i+=4){
-            for (int j=-1; j<=1; j+=2){
-                if (this.isValidPosition(new Pair<>(initialPosition.getX()+i,initialPosition.getY()+j))) {
-                    this.logic.hit(initialPosition.getX()+i,initialPosition.getY()+j);
-                    assertEquals(new Pair<>(initialPosition.getX()+i,initialPosition.getY()+j), this.getKnightPosition());
-                    this.logic.hit(initialPosition.getX(), initialPosition.getY());
-                }
-                if (this.isValidPosition(new Pair<>(initialPosition.getX()+j,initialPosition.getY()+i))) {
-                    this.logic.hit(initialPosition.getX()+j,initialPosition.getY()+i);
-                    assertEquals(new Pair<>(initialPosition.getX()+j,initialPosition.getY()+i), this.getKnightPosition());
-                    this.logic.hit(initialPosition.getX(), initialPosition.getY());
-                }
+        for (Pair<Integer, Integer> movement : this.getPossibleMovements(initialPosition)) {
+            if (this.isValidPosition(movement)){
+                this.randomLogics.hit(movement.getX(), movement.getY());
+                assertNotSame(initialPosition, this.getKnightPosition());
+                assertTrue(this.isValidPosition(this.getKnightPosition()));
+                this.randomLogics.hit(initialPosition.getX(), initialPosition.getY());
             }
         }
+    }
+
+    @Test
+    void checkPawnHitted(){
+        Pair<Integer,Integer> pawnPosition = new Pair<>(2,4);
+        Pair<Integer,Integer> knightPosition = new Pair<>(0,0);
+        final Logics selectedLogic = new LogicsImpl(SIZE, pawnPosition, knightPosition);
+        assertFalse(selectedLogic.hit(1,2));
+        assertTrue(selectedLogic.hit(2,4));
+    }
+
+    private List<Pair<Integer, Integer>> getPossibleMovements(Pair<Integer, Integer> initialPosition) {
+        List<Pair<Integer,Integer>> list = new ArrayList<>();
+        for (int i=-2; i<=2; i+=4) {
+            for (int j = -1; j <= 1; j += 2) {
+                list.add(new Pair<>(initialPosition.getX()+i, initialPosition.getY()+j));
+                list.add(new Pair<>(initialPosition.getX()+j, initialPosition.getY()+i));
+            }
+        }
+        return list;
+    }
+
+    private Pair<Integer, Integer> getKnightPosition() {
+        return this.getPosition(t -> this.randomLogics.hasKnight(t.getX(), t.getY()));
+    }
+
+    private Pair<Integer, Integer> getPawnPosition() {
+        return this.getPosition(t -> this.randomLogics.hasPawn(t.getX(), t.getY()));
     }
 
     private Pair<Integer, Integer> getPosition(Predicate<Pair<Integer, Integer>> predicate) {
@@ -74,17 +96,8 @@ public class LogicTest {
         return null;
     }
 
-    private Pair<Integer, Integer> getKnightPosition() {
-        return this.getPosition(t -> this.logic.hasKnight(t.getX(), t.getY()));
-    }
-
-    private Pair<Integer, Integer> getPawnPosition() {
-        return this.getPosition(t -> this.logic.hasPawn(t.getX(), t.getY()));
-    }
-
     private boolean isValidPosition(Pair<Integer,Integer> position){
-        if (position.getX()>=0 && position.getX()<SIZE)
-            return (position.getY()>=0 && position.getY() < SIZE);
-        return false;
+        return position.getX()>=0 && position.getX()<SIZE
+                && position.getY()>=0 && position.getY() < SIZE;
     }
 }

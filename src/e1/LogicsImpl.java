@@ -1,39 +1,33 @@
 package e1;
 
-import java.util.*;
-
 public class LogicsImpl implements Logics {
 	
 	private final Pair<Integer,Integer> pawn;
 	private Pair<Integer,Integer> knight;
-	private final Random random = new Random();
-	private final int size;
-	 
-    public LogicsImpl(int size){
-    	this.size = size;
-        this.pawn = this.randomEmptyPosition();
-        this.knight = this.randomEmptyPosition();	
-    }
-    
-	private final Pair<Integer,Integer> randomEmptyPosition(){
-    	Pair<Integer,Integer> pos = new Pair<>(this.random.nextInt(size),this.random.nextInt(size));
-    	// the recursive call below prevents clash with an existing pawn
-    	return this.pawn!=null && this.pawn.equals(pos) ? randomEmptyPosition() : pos;
-    }
+	private final GameManager gameManager;
+
+	public LogicsImpl(int size, Pair<Integer,Integer> pawnPosition,
+			  Pair<Integer,Integer> knightPosition){
+		this.gameManager = new GameManagerImpl(size);
+		this.pawn = pawnPosition;
+		this.knight = knightPosition;
+	}
+
+	public LogicsImpl(int size){
+		this.gameManager = new GameManagerImpl(size);
+		this.pawn = this.gameManager.generatePawn();
+		this.knight = this.gameManager.generateKnight(this.pawn);
+	}
     
 	@Override
 	public boolean hit(int row, int col) {
-		if (row<0 || col<0 || row >= this.size || col >= this.size) {
+		final var pos = new Pair<>(row, col);
+		if (!this.gameManager.validPosition(pos))
 			throw new IndexOutOfBoundsException();
-		}
-		// Below a compact way to express allowed moves for the knight
-		int x = row-this.knight.getX();
-		int y = col-this.knight.getY();
-		if (x!=0 && y!=0 && Math.abs(x)+Math.abs(y)==3) {
-			this.knight = new Pair<>(row,col);
-			return this.pawn.equals(this.knight);
-		}
-		return false;
+		if (!this.gameManager.validMovement(this.knight, pos))
+			return false;
+		this.moveKnight(pos);
+		return this.pawn.equals(this.knight);
 	}
 
 	@Override
@@ -44,5 +38,9 @@ public class LogicsImpl implements Logics {
 	@Override
 	public boolean hasPawn(int row, int col) {
 		return this.pawn.equals(new Pair<>(row,col));
+	}
+
+	private void moveKnight(Pair<Integer, Integer> pos){
+		this.knight = pos;
 	}
 }
