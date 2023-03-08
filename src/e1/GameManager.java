@@ -19,15 +19,6 @@ public interface GameManager {
     /**
      * Method that checks if a cell is part of the board.
      *
-     * @param row of cell
-     * @param column of cell
-     * @return true if the cell belongs to the board
-     */
-    boolean validPosition(int row, int column);
-
-    /**
-     * Method that checks if a cell is part of the board.
-     *
      * @param cel to check
      * @return true if the cell belongs to the board
      */

@@ -32,16 +32,11 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public boolean validPosition(int row, int column) {
-        return this.board.validPosition(row, column);
-    }
-
-    @Override
     public boolean validMovement(Pair<Integer, Integer> initialPosition,
                                  Pair<Integer, Integer> finalPosition) {
         int x = finalPosition.getX()-initialPosition.getX();
         int y = finalPosition.getY()-initialPosition.getY();
-        return x!=0 && y!=0 && Math.abs(x)+Math.abs(y)==3 && this.validPosition(x,y);
+        return x!=0 && y!=0 && Math.abs(x)+Math.abs(y)==3 && this.validPosition(finalPosition);
     }
 
     private Pair<Integer, Integer> randomPosition() {
