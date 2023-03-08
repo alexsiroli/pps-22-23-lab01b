@@ -10,13 +10,13 @@ public class BoardImpl implements Board {
         this.columns = columns;
     }
 
-    public BoardImpl(int n) {
-        this(n, n);
-    }
-
     public boolean validPosition(int row, int column) {
         return (row>=0 && column>=0 &&
                 row < this.rows && column < this.columns);
+    }
+
+    public boolean validPosition(Pair<Integer, Integer> cell) {
+        return this.validPosition(cell.getX(), cell.getY());
     }
 
     public int getRows() {

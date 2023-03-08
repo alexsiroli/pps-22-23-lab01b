@@ -17,6 +17,14 @@ public interface Board {
     boolean validPosition(int row, int column);
 
     /**
+     * Method that checks if a cell is part of the board.
+     *
+     * @param cel to check
+     * @return true if the cell belongs to the board
+     */
+    boolean validPosition(Pair<Integer, Integer> cel);
+
+    /**
      * @return number of rows
      */
     int getRows();
