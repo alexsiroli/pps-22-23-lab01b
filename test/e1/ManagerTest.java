@@ -9,18 +9,19 @@ public class ManagerTest {
     private final static int SIZE = 5;
     private static final int LAPS_NUMBER = 100;
 
-    private final GameManager gameManager = new GameManagerImpl(SIZE);
+    private final Board board = new BoardImpl(SIZE, SIZE);
+    private final GameManager gameManager = new GameManagerImpl(this.board);
 
     @Test
     void generatePawn() {
         final var pawnPosition = this.gameManager.generatePawn();
-        assertTrue(this.gameManager.validPosition(pawnPosition));
+        assertTrue(this.board.validPosition(pawnPosition));
     }
 
     @Test
     void generateKnight() {
         final var knightPosition = this.gameManager.generateKnight(new Pair<>(0,0));
-        assertTrue(this.gameManager.validPosition(knightPosition));
+        assertTrue(this.board.validPosition(knightPosition));
     }
 
     @Test
@@ -34,9 +35,9 @@ public class ManagerTest {
     void bruteForceCheck() {
         for (int i=0; i<LAPS_NUMBER; i++) {
             var pawnPosition = this.gameManager.generatePawn();
-            assertTrue(this.gameManager.validPosition(pawnPosition));
+            assertTrue(this.board.validPosition(pawnPosition));
             var knightPosition = this.gameManager.generateKnight(pawnPosition);
-            assertTrue(this.gameManager.validPosition(knightPosition));
+            assertTrue(this.board.validPosition(knightPosition));
             assertNotSame(pawnPosition, knightPosition);
         }
     }
@@ -49,8 +50,6 @@ public class ManagerTest {
         finalPosition = new Pair<>(2,1);
         assertTrue(this.gameManager.validMovement(initialPosition, finalPosition));
         finalPosition = new Pair<>(2,2);
-        assertFalse(this.gameManager.validMovement(initialPosition, finalPosition));
-        finalPosition = new Pair<>(-1,-2);
         assertFalse(this.gameManager.validMovement(initialPosition, finalPosition));
     }
 }

@@ -17,14 +17,6 @@ public interface GameManager {
     Pair<Integer, Integer> generateKnight(Pair<Integer, Integer> pawn);
 
     /**
-     * Method that checks if a cell is part of the board.
-     *
-     * @param cel to check
-     * @return true if the cell belongs to the board
-     */
-    boolean validPosition(Pair<Integer, Integer> cel);
-
-    /**
      * Method that verifies if the movement performed by the rider is valid.
      *
      * @param initialPosition of the knight

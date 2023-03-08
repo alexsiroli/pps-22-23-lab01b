@@ -7,12 +7,8 @@ public class GameManagerImpl implements GameManager {
     private final Board board;
     private final Random random = new Random();
 
-    public GameManagerImpl(int rows, int columns) {
-        this.board = new BoardImpl(rows, columns);
-    }
-
-    public GameManagerImpl(int n) {
-        this(n,n);
+    public GameManagerImpl(Board board) {
+        this.board = board;
     }
 
     @Override
@@ -27,16 +23,11 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public boolean validPosition(Pair<Integer, Integer> position) {
-        return this.board.validPosition(position);
-    }
-
-    @Override
     public boolean validMovement(Pair<Integer, Integer> initialPosition,
                                  Pair<Integer, Integer> finalPosition) {
         int x = finalPosition.getX()-initialPosition.getX();
         int y = finalPosition.getY()-initialPosition.getY();
-        return x!=0 && y!=0 && Math.abs(x)+Math.abs(y)==3 && this.validPosition(finalPosition);
+        return x!=0 && y!=0 && Math.abs(x)+Math.abs(y)==3;
     }
 
     private Pair<Integer, Integer> randomPosition() {
