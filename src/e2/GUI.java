@@ -28,7 +28,7 @@ public class GUI extends JFrame {
         ActionListener onClick = (e)->{
             final JButton bt = (JButton)e.getSource();
             final Pair<Integer,Integer> pos = this.buttons.get(bt);
-            boolean aMineWasFound = true; // call the logic here to tell it that cell at 'pos' has been seleced
+            boolean aMineWasFound = this.logics.hasMine(pos); // call the logic here to tell it that cell at 'pos' has been seleced
             if (aMineWasFound) {
                 this.quitGame();
                 JOptionPane.showMessageDialog(this, "You lost!!");
