@@ -13,4 +13,6 @@ public interface Logics {
     Integer getNumber(Pair<Integer, Integer> pos);
 
     boolean hasMine(Pair<Integer, Integer> pos);
+
+    void showNumber(Pair<Integer, Integer> pos);
 }

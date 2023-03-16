@@ -1,18 +1,18 @@
 package e2;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 public class MineManagerImpl implements MineManager {
 
     Board board;
-    List<Pair<Integer, Integer>> minesPositions;
+    Set<Pair<Integer, Integer>> minesPositions;
     Random random = new Random();
 
     public MineManagerImpl(Board board, int mines) {
         this.board = board;
-        this.minesPositions = new ArrayList<>();
+        this.minesPositions = new HashSet<>();
         this.generateRandomMines(mines);
     }
 

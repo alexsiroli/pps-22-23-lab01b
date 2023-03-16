@@ -34,6 +34,7 @@ public class GUI extends JFrame {
                 JOptionPane.showMessageDialog(this, "You lost!!");
             } else {
                 bt.setEnabled(false);
+                this.logics.showNumber(pos);
                 this.drawBoard();
             }
             boolean isThereVictory = this.logics.isThereVictory(); // call the logic here to ask if there is victory
